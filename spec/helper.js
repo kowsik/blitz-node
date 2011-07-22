@@ -29,8 +29,8 @@ var http = require('http'),
         result: {
             region: 'california',
             timeline: [
-                { duration: 1, total: 10, hits: 8, errors: 1, timeouts: 1, volume: 10},
-                { duration: 2, total: 100, hits: 80, errors: 10, timeouts: 10, volume: 100}
+                { duration: 1, total: 10, executed: 8, errors: 1, timeouts: 1, volume: 10},
+                { duration: 2, total: 100, executed: 80, errors: 10, timeouts: 10, volume: 100}
             ]
         }        
     };
