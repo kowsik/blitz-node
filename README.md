@@ -25,16 +25,25 @@ var Blitz = require('blitz');
 
 console.log('Starting Sprint...');
 Blitz('<email>','<api-key>').sprint({
-    url: 'http://your.cool.ap',
+    steps: [
+        {url: 'http://your.cool.app'},
+        {url: 'http://your.cool.ap/page1'}
+    ],
     region: 'california'}, function (err, data) {
         if(err != null) {
             console.log(err);
             return;
         }
-        console.log('status: ' + data.response.status);
         console.log('region: ' + data.region);
         console.log('duration: ' + data.duration);
-        console.log('connect: ' + data.connect);
+		var steps = data.steps;
+		for(var i in steps) {
+			var step = steps[i];
+			console.log("> Step " + i);
+			console.log("\tstatus: " + step.response.status);
+			console.log("\tduration: " + step.duration);
+			console.log("\tconnect: " + step.connect);
+		}
     });
 ```
 
@@ -45,7 +54,10 @@ var Blitz = require('blitz');
 
 console.log('Starting Rush...');
 Blitz('<email>','<api-key>').rush({
-    url: 'http://your.cool.ap',
+    steps: [
+        {url: 'http://your.cool.app'},
+        {url: 'http://your.cool.ap/page1'}
+    ],
     region: 'california',
     pattern: { intervals: [{start: 1, end: 10, duration: 30}]}
 }, function (err, data) {
@@ -57,6 +69,10 @@ Blitz('<email>','<api-key>').rush({
         var timeline = data.timeline;
         for(var i in timeline) {
             console.log('total: ' + timeline[i].total + ', errors: '+ timeline[i].errors);
+            var steps = timeline[i].steps;
+            for(var j in steps) {
+                console.log("\t\t{step "+ j + " duration: " + steps[j].duration + "}");
+            }
         }
         console.log(']');
     });
