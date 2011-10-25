@@ -10,12 +10,17 @@ describe("Blitz", function () {
         runs (function() {
             Blitz('user', 'key', 'localhost', 9295)
                 .rush({
-                    user: 'c123', 
+                    user: 'c123',
                     pattern: { intervals: []},
-                    url: 'http://127.0.0.1'
+                    steps: [
+                        {url: 'http://127.0.0.1'},
+                        {url: 'http://127.0.0.1/2'}
+                    ]
                 }, function (err, data) {
                 expect(data.region).toBeDefined();
                 expect(data.timeline).toBeDefined();
+                expect(data.timeline[0].steps).toBeDefined();
+                expect(data.timeline[0].steps.length).toEqual(2);
                 finished = true;
             });
         });
@@ -28,12 +33,16 @@ describe("Blitz", function () {
         var finished = false;
         runs (function() {
             Blitz('user', 'key', 'localhost', 9295)
-                .sprint({url: 'http://127.0.0.1'}, function (err, data) {
+                .sprint({
+                    steps: [
+                        {url: 'http://127.0.0.1'},
+                        {url: 'http://127.0.0.1/2'}
+                    ]
+                }, function (err, data) {
                     expect(data.region).toBeDefined();
                     expect(data.duration).toBeDefined();
-                    expect(data.connect).toBeDefined();
-                    expect(data.request).toBeDefined();
-                    expect(data.response).toBeDefined();
+                    expect(data.steps).toBeDefined();
+                    expect(data.steps.length).toEqual(2);
                     finished = true;
                 });
         });
@@ -47,10 +56,18 @@ describe("Blitz", function () {
             finished = false;
         // run a sprint to authenticate
         runs (function () {
-            b.sprint({url: 'http://127.0.0.1'}, function (err, data) {
+            b.sprint({
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
+            }, function (err, data) {
                 //now we can run a rush
                 expect(function () {
-                    b.rush({user: 'c123', url: 'http://127.0.0.1'}, function (err, data) {});  
+                    b.rush({
+                        user: 'c123',
+                        steps: [{url: 'http://127.0.0.1'}] 
+                    }, function (err, data) {});  
                 }).toThrow('missing pattern');
                 finished = true;
             });

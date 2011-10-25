@@ -6,21 +6,44 @@ var http = require('http'),
         result: {
             region: 'california',
             duration: 10,
-            connect: 1,
-            request: {
-                line: 'GET / HTTP/1.1',
-                method: 'GET',
-                url: 'http://localhost:9295',
-                headers: {},
-                content: new Buffer('content', 'utf8').toString('base64')
-            },
-            response: {
-                line: 'GET / HTTP/1.1',
-                message: 'message',
-                status: 200,
-                headers: {},
-                content: new Buffer('content', 'utf8').toString('base64')
-            }
+            steps: [
+                {
+                    duration: 5,
+                    connect: 1,
+                    request: {
+                        line: 'GET / HTTP/1.1',
+                        method: 'GET',
+                        url: 'http://localhost:9295',
+                        headers: {},
+                        content: new Buffer('content', 'utf8').toString('base64')
+                    },
+                    response: {
+                        line: 'GET / HTTP/1.1',
+                        message: 'message',
+                        status: 200,
+                        headers: {},
+                        content: new Buffer('content', 'utf8').toString('base64')
+                    }
+                },
+                {
+                    duration: 5,
+                    connect: 1,
+                    request: {
+                        line: 'GET / HTTP/1.1',
+                        method: 'GET',
+                        url: 'http://localhost:9295',
+                        headers: {},
+                        content: new Buffer('content', 'utf8').toString('base64')
+                    },
+                    response: {
+                        line: 'GET / HTTP/1.1',
+                        message: 'message',
+                        status: 200,
+                        headers: {},
+                        content: new Buffer('content', 'utf8').toString('base64')
+                    }
+                }   
+            ]
         }
     },
     timeline = {
@@ -29,8 +52,24 @@ var http = require('http'),
         result: {
             region: 'california',
             timeline: [
-                { duration: 1, total: 10, executed: 8, errors: 1, timeouts: 1, volume: 10},
-                { duration: 2, total: 100, executed: 80, errors: 10, timeouts: 10, volume: 100}
+                { 
+                    duration: 10, 
+                    total: 10, 
+                    executed: 8, 
+                    errors: 1, 
+                    timeouts: 1, 
+                    volume: 10, 
+                    steps: [{d:5, c:1, e:0, t:1, a:4}, {d:5, c:1, e:1, t:0, a:4}]
+                },
+                { 
+                    duration: 18, 
+                    total: 100, 
+                    executed: 80, 
+                    errors: 10, 
+                    timeouts: 10, 
+                    volume: 100,
+                    steps: [{d:9, c:1, e:5, t:5, a:4}, {d:9, c:1, e:5, t:5, a:4}]
+                }
             ]
         }        
     };

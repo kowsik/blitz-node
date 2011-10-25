@@ -9,7 +9,10 @@ describe("Rush", function () {
             rush.create(credentials, {
                 user: 'c123', 
                 pattern: { intervals: []}, 
-                url: 'http://127.0.0.1'
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
             }, 
             function (err, data) {
                 expect(data.region).toBeDefined();
@@ -28,7 +31,10 @@ describe("Rush", function () {
             rush.create(credentials, {
                 user: 'c123', 
                 pattern: { intervals: []}, 
-                url: 'http://127.0.0.1'
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
             }, 
             function (err, data) {
                 var timeline = data.timeline;
@@ -52,7 +58,10 @@ describe("Rush", function () {
             rush.create(credentials, {
                 user: 'c123', 
                 pattern: { intervals: []}, 
-                url: 'http://127.0.0.1'
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
             }, 
             function (err, data) {
                 expect(data.region).toEqual('california');
@@ -70,11 +79,14 @@ describe("Rush", function () {
             rush.create(credentials, {
                 user: 'c123', 
                 pattern: { intervals: []}, 
-                url: 'http://127.0.0.1'
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
             }, 
             function (err, data) {
                 var timeline = data.timeline;
-                expect(timeline[0].duration).toEqual(1);
+                expect(timeline[0].duration).toEqual(10);
                 expect(timeline[0].total).toEqual(10);
                 expect(timeline[0].hits).toEqual(8);
                 expect(timeline[0].errors).toEqual(1);
@@ -91,8 +103,65 @@ describe("Rush", function () {
         expect(function() {
             rush.create(credentials, {
                 user: 'c123', 
-                url: 'http://127.0.0.1'
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
             }, function (err, data) {}).execute();  
         }).toThrow('missing pattern');
     });
+    
+    it("should have an Array of Steps inside the timeline", function () {
+        var finished = false;
+        runs (function() {
+            rush.create(credentials, {
+                user: 'c123', 
+                pattern: { intervals: []}, 
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
+            }, 
+            function (err, data) {
+                var steps = data.timeline[0].steps;
+                expect(Object.prototype.toString.apply(steps)).toBe('[object Array]');
+                expect(steps[0].duration).toBeDefined();
+                expect(steps[0].connect).toBeDefined();
+                expect(steps[0].asserts).toBeDefined();
+                expect(steps[0].errors).toBeDefined();
+                expect(steps[0].timeouts).toBeDefined();
+                finished = true;
+            }).execute();
+        });
+        waitsFor(function () {
+            return finished;
+        });
+    })
+
+    it("should match the expect step data", function () {
+        var finished = false;
+        runs (function() {
+            rush.create(credentials, {
+                user: 'c123', 
+                pattern: { intervals: []}, 
+                steps: [
+                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1/2'}
+                ]
+            }, 
+            function (err, data) {
+                var steps = data.timeline[0].steps;
+                expect(Object.prototype.toString.apply(steps)).toBe('[object Array]');
+                expect(steps[0].duration).toEqual(5);
+                expect(steps[0].connect).toEqual(1);
+                expect(steps[0].asserts).toEqual(4);
+                expect(steps[0].errors).toEqual(0);
+                expect(steps[0].timeouts).toEqual(1);
+                finished = true;
+            }).execute();
+        });
+        waitsFor(function () {
+            return finished;
+        });
+    })
 });
