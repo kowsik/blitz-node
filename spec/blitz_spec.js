@@ -11,7 +11,7 @@ describe("Blitz", function () {
             Blitz('user', 'key', 'localhost', 9295)
                 .rush({
                     user: 'c123',
-                    pattern: { intervals: []},
+                    pattern: {intervals: []},
                     steps: [
                         {url: 'http://127.0.0.1'},
                         {url: 'http://127.0.0.1/2'}
@@ -73,6 +73,32 @@ describe("Blitz", function () {
             });
         });
         waitsFor (function() {
+            return finished;
+        });
+    });
+    
+    it("should be authenticated", function () {
+        var b = Blitz('user', 'key', 'localhost', 9295, true);
+        expect(b.authenticated()).toBeTruthy();
+    });
+    
+    it("should authenticates", function () {
+        var finished = false;
+        runs (function() {
+            var b = Blitz('user', 'key', 'localhost', 9295);
+            expect(b.authenticated()).toBeFalsy();
+            b.sprint(
+                {
+                    steps: [
+                        {url: 'http://127.0.0.1'},
+                        {url: 'http://127.0.0.1/2'}
+                    ]
+                }, function (err, data) {
+                    expect(b.authenticated()).toBeTruthy();
+                    finished = true;
+                });
+        });
+        waitsFor(function () {
             return finished;
         });
     });
