@@ -21,30 +21,32 @@ Then
 **Sprint**
 
 ```javascript
-var Blitz = require('blitz');
+var Blitz = require('../blitz-node/lib/blitz.js');
 
 console.log('Starting Sprint...');
-Blitz('<email>','<api-key>').sprint({
+new Blitz('<email>','<api-key>').sprint({
     steps: [
         {url: 'http://your.cool.app'},
         {url: 'http://your.cool.ap/page1'}
     ],
-    region: 'california'}, function (err, data) {
-        if(err != null) {
-            console.log(err);
-            return;
-        }
-        console.log('region: ' + data.region);
-        console.log('duration: ' + data.duration);
-		var steps = data.steps;
-		for(var i in steps) {
-			var step = steps[i];
-			console.log("> Step " + i);
-			console.log("\tstatus: " + step.response.status);
-			console.log("\tduration: " + step.duration);
-			console.log("\tconnect: " + step.connect);
-		}
-    });
+	region: 'california'
+}).on('status', function (data) {
+    process.stdout.write('.');
+}).on('complete', function (data) {
+    console.log('region: ' + data.region);
+    console.log('duration: ' + data.duration);
+    var steps = data.steps;
+    for(var i in steps) {
+        var step = steps[i];
+        console.log("> Step " + i);
+        console.log("\tstatus: " + step.response.status);
+        console.log("\tduration: " + step.duration);
+        console.log("\tconnect: " + step.connect);
+    }
+}).on('error', function (response) {
+    console.log("error: " + response.error);	
+    console.log("reason: " + response.reason);
+});
 ```
 
 **Rush**
@@ -53,27 +55,28 @@ Blitz('<email>','<api-key>').sprint({
 var Blitz = require('blitz');
 
 console.log('Starting Rush...');
-Blitz('<email>','<api-key>').rush({
+new Blitz('<email>','<api-key>').rush({
     steps: [
         {url: 'http://your.cool.app'},
         {url: 'http://your.cool.ap/page1'}
     ],
     region: 'california',
     pattern: { intervals: [{start: 1, end: 10, duration: 30}]}
-}, function (err, data) {
-        if(err != null) {
-            console.log(err);
-            return;
-        }
-        console.log('timeline: [');
-        var timeline = data.timeline;
-        for(var i in timeline) {
-            console.log('total: ' + timeline[i].total + ', errors: '+ timeline[i].errors);
-            var steps = timeline[i].steps;
-            for(var j in steps) {
-                console.log("\t\t{step "+ j + " duration: " + steps[j].duration + "}");
-            }
-        }
-        console.log(']');
-    });
+}).on('status', function (data) {
+    process.stdout.write('.');
+}).on('complete', function (data) {
+    console.log('region: ' + data.region);
+    console.log('duration: ' + data.duration);
+    var steps = data.steps;
+    for(var i in steps) {
+        var step = steps[i];
+        console.log("> Step " + i);
+        console.log("\tstatus: " + step.response.status);
+        console.log("\tduration: " + step.duration);
+        console.log("\tconnect: " + step.connect);
+    }
+}).on('error', function (response) {
+    console.log("error: " + response.error);	
+    console.log("reason: " + response.reason);
+});
 ```
