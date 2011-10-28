@@ -10,14 +10,18 @@ process.env['BLITZ_API_USER'] = 'user';
 helper.mockServer.listen(testServerPort);
 
 describe("API Client", function () {
-    var client = api.client(credentials['username'], credentials['apiKey'],
-        'localhost', testServerPort);
+    var client; 
+    
+    beforeEach(function () {
+        client = new api.Client(credentials['username'], credentials['apiKey'],
+            'localhost', testServerPort);
+    });
 
     describe("execute", function () {
-        it("should receive ok on success", function () {
+        it("should receive ok on queue event", function () {
             var finished = false;
             runs (function() {
-                client.execute({key:"value"}, function (result) {
+                client.execute({key:"value"}).on('queue', function (result) {
                     expect(result).toBeDefined();
                     expect(result.ok).toBeTruthy(); 
                     finished = true;
@@ -31,13 +35,14 @@ describe("API Client", function () {
         it("should receive error on server failure", function () {
             var finished = false;
             runs (function() {
-                client.execute({key:"value", timeout: 1000}, function (result) {
-                    expect(result).toBeDefined();
-                    expect(result.ok).toBeUndefined(); 
-                    expect(result.error).toBeDefined(); 
-                    expect(result.error).toEqual('server');
-                    finished = true;
-                });
+                client.execute({key:"value", timeout: 1000})
+                    .on('error', function (result) {
+                        expect(result).toBeDefined();
+                        expect(result.ok).toBeUndefined(); 
+                        expect(result.error).toBeDefined(); 
+                        expect(result.error).toEqual('server');
+                        finished = true;
+                    });
             });
             waitsFor(function () {
                 return finished;
@@ -54,7 +59,7 @@ describe("API Client", function () {
         it("should return ok", function () {
             var finished = false;
             runs (function() {
-                client.login(function (result) {
+                client.login().on('login', function (result) {
                     expect(result).toBeDefined();
                     expect(result.ok).toBeTruthy(); 
                     finished = true;
@@ -68,7 +73,7 @@ describe("API Client", function () {
         it("should return a API key", function () {
             var finished = false;
             runs (function() {
-                client.login(function (result) {
+                client.login().on('login', function (result) {
                     expect(result).toBeDefined();
                     expect(result.api_key).toEqual('123');
                     finished = true;
@@ -83,7 +88,7 @@ describe("API Client", function () {
             var finished = false;
             process.env['BLITZ_API_USER'] = 'user1';
             runs (function() {
-                client.login(function (result) {
+                client.login().on('error', function (result) {
                     expect(result).toBeDefined();
                     expect(result.ok).toBeUndefined(); 
                     expect(result.error).toBeDefined(); 
@@ -97,7 +102,3 @@ describe("API Client", function () {
         });
     });
 });
-
-
-    
-    

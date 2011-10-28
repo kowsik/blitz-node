@@ -1,19 +1,25 @@
 var testServerPort = 9295,
-    sprint = require('../../lib/blitz/sprint'),
+    Sprint = require('../../lib/blitz/sprint'),
     credentials = {username: 'user', apiKey: 'key', host: 'localhost', port: 9295};
 
 describe("Sprint", function () {
+    var sprint;
+    
+    beforeEach(function() {
+        sprint = new Sprint();
+    });
+    
     it("should have a Result object", function () {
         var finished = false;
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 expect(data.region).toBeDefined();
                 expect(data.duration).toBeDefined();
                 expect(data.steps).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -25,14 +31,14 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 var step = data.steps[0];
                 expect(step.duration).toBeDefined();
                 expect(step.connect).toBeDefined();
                 expect(step.request).toBeDefined();
                 expect(step.response).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -44,7 +50,7 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 var request = data.steps[0].request;
                 expect(request.line).toBeDefined();
                 expect(request.method).toBeDefined();
@@ -52,7 +58,7 @@ describe("Sprint", function () {
                 expect(request.headers).toBeDefined();
                 expect(request.content).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -64,7 +70,7 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 var response = data.steps[0].response;
                 expect(response.line).toBeDefined();
                 expect(response.message).toBeDefined();
@@ -72,7 +78,7 @@ describe("Sprint", function () {
                 expect(response.headers).toBeDefined();
                 expect(response.content).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -84,12 +90,12 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 expect(data.region).toEqual('california');
                 expect(data.duration).toEqual(10);
                 expect(data.steps.length).toEqual(2);
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -101,14 +107,14 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 var step = data.steps[0];
                 expect(step.connect).toEqual(1);
                 expect(step.duration).toEqual(5);
                 expect(step.request).toBeDefined();
                 expect(step.response).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -120,13 +126,13 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 var request = data.steps[0].request;
                 expect(request.method).toEqual('GET');
                 expect(request.url).toEqual('http://localhost:9295');
                 expect(request.content).toEqual('content');
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -138,13 +144,13 @@ describe("Sprint", function () {
         runs (function() {
             sprint.create(credentials, {
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('complete', function (data) {
                 var response = data.steps[0].response;
                 expect(response.message).toEqual('message');
                 expect(response.status).toEqual(200);
                 expect(response.content).toEqual('content');
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -157,11 +163,11 @@ describe("Sprint", function () {
             sprint.create(credentials, {
                 user: 'b123',
                 steps: [{url: 'http://127.0.0.1'}]
-            }, function (err, data) {
+            }).execute().on('status', function (data) {
                 var response = data.steps[0].response;
                 expect(response.status).toEqual(200);
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;

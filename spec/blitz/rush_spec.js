@@ -1,8 +1,14 @@
 var testServerPort = 9295,
-    rush = require('../../lib/blitz/rush'),
+    Rush = require('../../lib/blitz/rush'),
     credentials = {username: 'user', apiKey: 'key', host: 'localhost', port: 9295};
 
 describe("Rush", function () {
+    var rush;
+    
+    beforeEach(function() {
+        rush = new Rush();
+    });
+    
     it("should have a Result object", function () {
         var finished = false;
         runs (function() {
@@ -13,12 +19,11 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, 
-            function (err, data) {
+            }).execute().on('complete', function (data) {
                 expect(data.region).toBeDefined();
                 expect(data.timeline).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -35,8 +40,7 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, 
-            function (err, data) {
+            }).execute().on('complete', function (data) {
                 var timeline = data.timeline;
                 expect(Object.prototype.toString.apply(timeline)).toBe('[object Array]');
                 expect(timeline[0].duration).toBeDefined();
@@ -45,7 +49,7 @@ describe("Rush", function () {
                 expect(timeline[0].errors).toBeDefined();
                 expect(timeline[0].timeouts).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -62,11 +66,10 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, 
-            function (err, data) {
+            }).execute().on('complete', function (data) {
                 expect(data.region).toEqual('california');
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -83,8 +86,7 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, 
-            function (err, data) {
+            }).execute().on('complete', function (data) {
                 var timeline = data.timeline;
                 expect(timeline[0].duration).toEqual(10);
                 expect(timeline[0].total).toEqual(10);
@@ -92,7 +94,7 @@ describe("Rush", function () {
                 expect(timeline[0].errors).toEqual(1);
                 expect(timeline[0].timeouts).toEqual(1);
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -107,7 +109,7 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, function (err, data) {}).execute();  
+            }).execute();  
         }).toThrow('missing pattern');
     });
     
@@ -121,8 +123,7 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, 
-            function (err, data) {
+            }).execute().on('complete', function (data) {
                 var steps = data.timeline[0].steps;
                 expect(Object.prototype.toString.apply(steps)).toBe('[object Array]');
                 expect(steps[0].duration).toBeDefined();
@@ -131,7 +132,7 @@ describe("Rush", function () {
                 expect(steps[0].errors).toBeDefined();
                 expect(steps[0].timeouts).toBeDefined();
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;
@@ -148,8 +149,7 @@ describe("Rush", function () {
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, 
-            function (err, data) {
+            }).execute().on('complete', function (data) {
                 var steps = data.timeline[0].steps;
                 expect(Object.prototype.toString.apply(steps)).toBe('[object Array]');
                 expect(steps[0].duration).toEqual(5);
@@ -158,7 +158,7 @@ describe("Rush", function () {
                 expect(steps[0].errors).toEqual(0);
                 expect(steps[0].timeouts).toEqual(1);
                 finished = true;
-            }).execute();
+            });
         });
         waitsFor(function () {
             return finished;

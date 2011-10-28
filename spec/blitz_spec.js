@@ -5,18 +5,23 @@ var testServerPort = 9295,
 process.env['BLITZ_API_USER'] = 'user';
 
 describe("Blitz", function () {
+    var blitz;
+    
+    beforeEach(function () {
+        blitz = new Blitz('user', 'key', 'localhost', 9295);
+    });
+    
     it("should return a Rush Result object", function () {
         var finished = false;
         runs (function() {
-            Blitz('user', 'key', 'localhost', 9295)
-                .rush({
+            blitz.rush({
                     user: 'c123',
                     pattern: {intervals: []},
                     steps: [
                         {url: 'http://127.0.0.1'},
                         {url: 'http://127.0.0.1/2'}
                     ]
-                }, function (err, data) {
+                }).on('complete', function (data) {
                 expect(data.region).toBeDefined();
                 expect(data.timeline).toBeDefined();
                 expect(data.timeline[0].steps).toBeDefined();
@@ -32,13 +37,12 @@ describe("Blitz", function () {
     it("should return a Sprint Result object", function () {
         var finished = false;
         runs (function() {
-            Blitz('user', 'key', 'localhost', 9295)
-                .sprint({
+            blitz.sprint({
                     steps: [
                         {url: 'http://127.0.0.1'},
                         {url: 'http://127.0.0.1/2'}
                     ]
-                }, function (err, data) {
+                }).on('complete', function (data) {
                     expect(data.region).toBeDefined();
                     expect(data.duration).toBeDefined();
                     expect(data.steps).toBeDefined();
@@ -52,22 +56,21 @@ describe("Blitz", function () {
     });
 
     it("should fail Rush if pattern is not given", function () {
-        var b = Blitz('user', 'key', 'localhost', 9295),
-            finished = false;
+        var finished = false;
         // run a sprint to authenticate
         runs (function () {
-            b.sprint({
+            blitz.sprint({
                 steps: [
                     {url: 'http://127.0.0.1'},
                     {url: 'http://127.0.0.1/2'}
                 ]
-            }, function (err, data) {
+            }).on('complete', function (data) {
                 //now we can run a rush
                 expect(function () {
-                    b.rush({
+                    blitz.rush({
                         user: 'c123',
                         steps: [{url: 'http://127.0.0.1'}] 
-                    }, function (err, data) {});  
+                    });  
                 }).toThrow('missing pattern');
                 finished = true;
             });
@@ -78,23 +81,22 @@ describe("Blitz", function () {
     });
     
     it("should be authenticated", function () {
-        var b = Blitz('user', 'key', 'localhost', 9295, true);
-        expect(b.authenticated()).toBeTruthy();
+        var b = new Blitz('user', 'key', 'localhost', 9295, true);
+        expect(b.authenticated).toBeTruthy();
     });
     
     it("should authenticates", function () {
         var finished = false;
         runs (function() {
-            var b = Blitz('user', 'key', 'localhost', 9295);
-            expect(b.authenticated()).toBeFalsy();
-            b.sprint(
+            expect(blitz.authenticated).toBeFalsy();
+            blitz.sprint(
                 {
                     steps: [
                         {url: 'http://127.0.0.1'},
                         {url: 'http://127.0.0.1/2'}
                     ]
-                }, function (err, data) {
-                    expect(b.authenticated()).toBeTruthy();
+                }).on('complete', function (data) {
+                    expect(blitz.authenticated).toBeTruthy();
                     finished = true;
                 });
         });
