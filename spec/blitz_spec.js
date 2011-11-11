@@ -15,10 +15,9 @@ describe("Blitz", function () {
         var finished = false;
         runs (function() {
             blitz.rush({
-                    user: 'c123',
                     pattern: {intervals: []},
                     steps: [
-                        {url: 'http://127.0.0.1'},
+                        {url: 'http://127.0.0.1', user: 'c123'},
                         {url: 'http://127.0.0.1/2'}
                     ]
                 }).on('complete', function (data) {
@@ -102,8 +101,7 @@ describe("Blitz", function () {
                 //now we can run a rush
                 expect(function () {
                     blitz.rush({
-                        user: 'c123',
-                        steps: [{url: 'http://127.0.0.1'}] 
+                        steps: [{url: 'http://127.0.0.1', user: 'c123'}] 
                     });  
                 }).toThrow('missing pattern');
                 finished = true;

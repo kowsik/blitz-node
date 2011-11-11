@@ -161,8 +161,7 @@ describe("Sprint", function () {
         var finished = false;
         runs (function() {
             sprint.create(credentials, {
-                user: 'b123',
-                steps: [{url: 'http://127.0.0.1'}]
+                steps: [{url: 'http://127.0.0.1', user: 'b123'}]
             }).execute().on('status', function (data) {
                 var response = data.steps[0].response;
                 expect(response.status).toEqual(200);

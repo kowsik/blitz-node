@@ -80,13 +80,13 @@ module.exports.mockServer = http.createServer(function (request, response) {
         request.addListener('data', function(chunk) { data += chunk; });
         request.addListener('end', function() {
             var parsedData = JSON.parse(data);
-            if (parsedData.timeout) {
+            if (parsedData.steps[0].timeout) {
                 response.writeHead(404);
             }
             else {
                 var id = 'a123';
-                if (parsedData.user) {
-                    id = parsedData.user;
+                if (parsedData.steps[0].user) {
+                    id = parsedData.steps[0].user;
                 }
                 response.writeHead(200, {'content-type': 'application/json'});
                 response.write(JSON.stringify({ok: true, job_id: id}));

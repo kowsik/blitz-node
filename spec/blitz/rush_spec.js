@@ -13,10 +13,9 @@ describe("Rush", function () {
         var finished = false;
         runs (function() {
             rush.create(credentials, {
-                user: 'c123', 
                 pattern: { intervals: []}, 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute().on('complete', function (data) {
@@ -34,10 +33,9 @@ describe("Rush", function () {
         var finished = false;
         runs (function() {
             rush.create(credentials, {
-                user: 'c123', 
                 pattern: { intervals: []}, 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute().on('complete', function (data) {
@@ -60,10 +58,9 @@ describe("Rush", function () {
         var finished = false;
         runs (function() {
             rush.create(credentials, {
-                user: 'c123', 
                 pattern: { intervals: []}, 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute().on('complete', function (data) {
@@ -80,10 +77,9 @@ describe("Rush", function () {
         var finished = false;
         runs (function() {
             rush.create(credentials, {
-                user: 'c123', 
                 pattern: { intervals: []}, 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute().on('complete', function (data) {
@@ -104,9 +100,8 @@ describe("Rush", function () {
     it("should fail if pattern is not given", function () {
         expect(function() {
             rush.create(credentials, {
-                user: 'c123', 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute();  
@@ -117,10 +112,9 @@ describe("Rush", function () {
         var finished = false;
         runs (function() {
             rush.create(credentials, {
-                user: 'c123', 
                 pattern: { intervals: []}, 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute().on('complete', function (data) {
@@ -143,10 +137,9 @@ describe("Rush", function () {
         var finished = false;
         runs (function() {
             rush.create(credentials, {
-                user: 'c123', 
                 pattern: { intervals: []}, 
                 steps: [
-                    {url: 'http://127.0.0.1'},
+                    {url: 'http://127.0.0.1', user: 'c123'},
                     {url: 'http://127.0.0.1/2'}
                 ]
             }).execute().on('complete', function (data) {

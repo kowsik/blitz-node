@@ -21,7 +21,7 @@ describe("API Client", function () {
         it("should receive ok on queue event", function () {
             var finished = false;
             runs (function() {
-                client.execute({key:"value"}).on('queue', function (result) {
+                client.execute({key:"value", steps:[{}]}).on('queue', function (result) {
                     expect(result).toBeDefined();
                     expect(result.ok).toBeTruthy(); 
                     finished = true;
@@ -35,7 +35,7 @@ describe("API Client", function () {
         it("should receive error on server failure", function () {
             var finished = false;
             runs (function() {
-                client.execute({key:"value", timeout: 1000})
+                client.execute({key:"value", steps:[{timeout: 1000}]})
                     .on('error', function (result) {
                         expect(result).toBeDefined();
                         expect(result.ok).toBeUndefined(); 
