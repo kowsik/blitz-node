@@ -54,7 +54,41 @@ describe("Blitz", function () {
             return finished;
         });
     });
+    
+    it('should execute a Sprint', function () {
+        var finished = false;
+        runs (function() {
+            runner = blitz.execute('http://127.0.0.1 /2');
+            runner.on('complete', function (data) {
+                expect(data.region).toBeDefined();
+                expect(data.duration).toBeDefined();
+                expect(data.steps).toBeDefined();
+                expect(data.steps.length).toEqual(2);
+                finished = true;
+            });
+        });
+        waitsFor(function () {
+            return finished;
+        });        
+    });
 
+    it('should execute a Rush', function () {
+        var finished = false;
+        runs (function() {
+            runner = blitz.execute('-p 1-100:60 -u c123 http://127.0.0.1 /2');
+            runner.on('complete', function (data) {
+                expect(data.region).toBeDefined();
+                expect(data.timeline).toBeDefined();
+                expect(data.timeline[0].steps).toBeDefined();
+                expect(data.timeline[0].steps.length).toEqual(2);
+                finished = true;
+            });
+        });
+        waitsFor(function () {
+            return finished;
+        });        
+    });
+    
     it("should fail Rush if pattern is not given", function () {
         var finished = false;
         // run a sprint to authenticate

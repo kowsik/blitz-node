@@ -44,15 +44,6 @@ describe("Validate", function () {
         expect(result.error).toEqual('validation');
     });
 
-    it("should fail validation with a bogus url", function () {
-        var json = {  steps: [{url: '12abs'}] },
-            hash = Validate(json),
-            result = hash.result();
-            
-        expect(hash.valid()).toBeFalsy();
-        expect(result.error).toEqual('validation');
-    });
-    
     it("should validate with 2 steps", function () {
         var json = { steps: [
                 {url: 'http://blitz.io/play'}, 
